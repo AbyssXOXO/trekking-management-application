@@ -1,0 +1,6 @@
+flask
+flask-SQLAlchemy
+flask-Security
+flask-login
+pydantic
+flask-restful

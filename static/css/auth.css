@@ -1,0 +1,110 @@
+html,
+body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-header-footer {
+  background-color: #f3f0ea;
+}
+
+.input-box {
+  background-color: #f3f0ea;
+}
+.custom-header-footer .navbar-brand {
+    font-family: "Literata", serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #4a7c59;
+}
+
+.card-heading {
+  font-family: "Literata", serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #4a4e4a;
+}
+.nunito-sans-box {
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 530;
+  color: #4a4e4a;
+  letter-spacing: 0.8px;
+}
+
+.submit-button {
+  background-color: #4a7c59 ;
+  border-color: #4a7c59;
+  color: #f3f0ea;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  font-weight: 550;
+}
+
+.submit-button:hover {
+  background-color: #386444;
+  color: #f3f0ea;
+}
+
+button.btn.submit-button:focus:active {
+  background-color: #386444;
+  color: #f3f0ea;
+  outline: 2.5px solid #386444;
+  outline-offset: 1.5px;
+}
+
+.gradient-login {
+  background:
+    url("../images/login-mountains.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.mb-1-5 {
+  margin-bottom: 0.44rem !important; 
+}
+.border-line {
+  height: 1px;
+  background-color: #386444;
+  border: none;
+}
+.login-card {
+  max-width: 440px;
+  width: 100%;
+  margin-inline: auto;
+}
+.new-account-link {
+  text-decoration: none;
+  color:#4a7c59;
+}
+.new-account-link:hover {
+  text-decoration: none;
+  color:#386444;
+}
+
+/* FOR REGISTER.HTML */
+.gradient-register {
+  background:
+    url("../images/register-mountains.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.input-box:focus {    /*for both the register and login files */
+  border-color: #386444;
+  box-shadow: 0 0 0 0.25rem rgba(22, 82, 40, 0.37)
+}
