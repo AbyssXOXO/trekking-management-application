@@ -1,0 +1,207 @@
+.custom-header-footer {
+  background-color: #f3f0ea;
+}
+
+.input-box {
+  background-color: #f3f0ea;
+}
+.custom-header-footer .navbar-brand {
+    font-family: "Literata", serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #386444;
+}
+
+.card-heading {
+  font-family: "Literata", serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #4a4e4a;
+}
+.nunito-sans-box {
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 530;
+  color: #4a4e4a;
+  letter-spacing: 0.8px;
+}
+
+.submit-button {
+  background-color: #4a7c59 ;
+  border-color: #4a7c59;
+  color: #f3f0ea;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  font-weight: 550;
+}
+
+.submit-button:hover {
+  background-color: #386444;
+  color: #f3f0ea;
+}
+
+button.btn.submit-button:focus:active {
+  background-color: #386444;
+  color: #f3f0ea;
+  outline: 2.5px solid #386444;
+  outline-offset: 1.5px;
+}
+
+.gradient-login {
+  background:
+    url("../images/login-mountains.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.mb-1-5 {
+  margin-bottom: 0.44rem !important; 
+}
+
+.login-card {
+  max-width: 440px;
+  width: 100%;
+  margin-inline: auto;
+}
+.new-account-link {
+  text-decoration: none;
+  color:#4a7c59;
+}
+.new-account-link:hover {
+  text-decoration: none;
+  color:#386444;
+}
+
+/* FOR REGISTER.HTML */
+.gradient-register {
+  background:
+    url("../images/register-mountains.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.input-box:focus {    /*for both the register and login files */
+  border-color: #386444;
+  box-shadow: 0 0 0 0.25rem rgba(22, 82, 40, 0.37)
+}
+
+
+/* for home page */
+
+.home-nav-button .nav-link { 
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  margin-right: 22px;
+  color: #757e79;
+  letter-spacing: 0.89px;
+}
+.home-nav-button .nav-link:hover { 
+  color: #4a7c59;
+}
+.home-main-heading {
+  font-family: "Literata", serif;
+  font-size: clamp(2.5rem, 10vw, 4rem);
+  font-weight: 700;
+  color: rgba(34, 40, 36, 0.9);
+  text-shadow:
+    0 0 1px rgba(0,0,0,0.15),
+    0 1px 1px rgba(0,0,0,0.08);
+  line-height: 0.97;
+}
+
+.brand {
+  color: #386444;
+}
+
+.home-main-desc {
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: rgba(34, 40, 36, 0.9);
+  text-shadow:
+    0 0 1px rgba(0,0,0,0.15),
+    0 1px 1px rgba(0,0,0,0.08);
+}
+
+/* for profile */
+
+.nav-profile {
+  background-color: #f3f0ea;
+}
+
+/* for admin dashboard */
+
+.admin-dashboard {
+  background-color: #f7f3ed;
+  color: #202020;
+  font-family: Arial, sans-serif;
+}
+
+.admin-sidebar {
+  background-color: #eee9df;
+}
+
+.admin-primary-btn {
+  background-color: #4a7c59;
+  border-color: #4a7c59;
+  color: #fff;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.admin-primary-btn:hover,
+.admin-primary-btn:focus {
+  background-color: #386444;
+  border-color: #386444;
+  color: #fff;
+}
+
+.admin-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  border-radius: 999px;
+  color: #555;
+  font-size: 0.9rem;
+  padding: 0.65rem 0.85rem;
+}
+
+.admin-nav-link:hover,
+.admin-nav-link.active {
+  background-color: #73a580;
+  color: #12301b;
+}
+
+.admin-topbar {
+  background-color: #f3eee6;
+  border-bottom: 1px solid #e4ddd2;
+}
+
+.admin-content {
+  max-width: 980px;
+}
+
+.admin-filter-card,
+.admin-trek-card {
+  border-radius: 14px;
+}
+
+.admin-table-head,
+.admin-trek-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 0.7fr 1fr 1fr;
+  align-items: center;
+  gap: 1rem;
+}
+
+.admin-table-head {
+  color: #4d4338;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+

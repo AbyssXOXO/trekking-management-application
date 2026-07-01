@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="admin-dashboard min-vh-100">
+  <div class="container-fluid">
+    <div class="row min-vh-100">
+      <aside class="col-12 col-lg-2 admin-sidebar p-3 d-flex flex-column">
+        <div class="d-flex align-items-center gap-2 mb-4">
+          <div>
+            <h6 class="mb-0 fw-semibold">Admin Panel</h6>
+            <small class="text-muted">Management Suite</small>
+          </div>
+        </div>
+        <a href="#" class="btn admin-primary-btn w-100 mb-4">
+          + New Trek
+        </a>
+        <nav class="nav flex-column gap-2">
+          <a class="nav-link admin-nav-link" href="#">
+            <span class="material-symbols-outlined admin-nav-icon">dashboard</span>
+            Dashboard
+          </a>
+        </nav>
+      </aside>
+      <main class="col-12 col-lg-10 p-0">
+        <header class="admin-topbar d-flex align-items-center justify-content-between px-4 py-3">
+          <a class="navbar-brand home-main-heading fs-2" href="#">TrekFlow</a>
+        </header>
+        <section class="admin-content p-4">
+          <div class="mb-4">
+            <h2 class="fw-bold mb-1">Manage Treks</h2>
+            <p class="text-muted mb-0">View, edit, and organize expedition routes.</p>
+          </div>
+          <div class="card border-0 shadow-sm mb-4 admin-filter-card">
+            <div class="card-body">
+              <div class="row g-3 align-items-center">
+                <div class="col-12 col-md-6">
+                  <input type="search" class="form-control rounded-pill" placeholder="Search by name or ID...">
+                </div>
+                <div class="col-6 col-md-3">
+                  <select class="form-select rounded-pill">
+                    <option selected>Difficulty</option>
+                    <option>Easy</option>
+                    <option>Moderate</option>
+                    <option>Hard</option>
+                  </select>
+                </div>
+                <div class="col-6 col-md-3">
+                  <select class="form-select rounded-pill">
+                    <option selected>Status</option>
+                    <option>Assigned</option>
+                    <option>Unassigned</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-none d-lg-grid admin-table-head px-4 mb-2">
+            <span>Trek Name</span>
+            <span>Location</span>
+            <span>Difficulty</span>
+            <span>Staff Assigned</span>
+            <span class="text-end">Actions</span>
+          </div>
+          <div class="gap-3">
+            <article class="card border-0 shadow-sm admin-trek-card">
+              <div class="card-body admin-trek-row">
+                <div class="d-flex align-items-center gap-3">
+                  <div>
+                    <h6 class="mb-0 fw-bold">Alpine Ridge Trail</h6>
+                    <small class="text-muted">ID: TRK 001</small>
+                  </div>
+                </div>
+                <div class="admin-mobile-label">
+                  <span class="d-lg-none text-muted small">Location</span>
+                  Swiss Alps
+                </div>
+                <div>
+                  <span class="badge bg-danger-subtle text-danger-emphasis">Hard</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <small class="text-muted">+2 more</small>
+                </div>
+                <div class="d-flex justify-content-lg-end gap-2">
+                  <button class="btn btn-sm btn-light border" type="button">Edit</button>
+                  <button class="btn btn-sm btn-light border" type="button">Staff</button>
+                  <button class="btn btn-sm btn-outline-danger" type="button">Delete</button>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
+{% endblock content %}

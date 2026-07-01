@@ -1,0 +1,66 @@
+{% extends "base.html"%}
+{% block content %}
+<div class="min-vh-100 d-flex flex-column">
+  <header>
+    <nav class="navbar navbar-expand-lg custom-header-footer justify-content-between">
+      <div class="d-flex justify-content-between align-items-center mx-4">
+        <a class="navbar-brand d-flex align-items-center gap-1" href="{{ url_for('home') }}">
+          <span class="material-symbols-outlined">
+            eco
+          </span>
+          TrekFlow
+        </a>
+      </div>
+      <div class="mx-4 home-nav-button">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" style="text-decoration: underline; text-underline-offset: 5px;" aria-current="page" href="{{ url_for('home') }}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="{{ url_for('treks') }}">Treks</a>
+            </li>
+            {% if current_user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="{{ url_for('profile') }}">Account</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="{{ url_for('logout') }}">Log out</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="{{ url_for('login') }}">Login</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="{{ url_for('register') }}">Register</a>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main class="flex-grow-1 d-flex align-items-center">
+    <div class="container-fluid px-5">
+      <div class="row">
+        <div class="col-md-7 col-lg-6 text-start">
+          <h1 class="home-main-heading">
+            Plan your next trek with <br>
+            <span class="brand">TrekFlow</span>
+          </h1>
+          <h4 class="home-main-desc pt-4">
+            Discover treks, book slots, and manage trekking operations in one place. <br>
+            Rooted in nature, designed for the modern explorer.
+          </h4>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer class="text-center py-2 custom-header-footer mt-auto" style="color: #4a4e4a;">
+    <p class="mb-0">&copy; 2026 Trek Flow. All rights reserved.</p>
+  </footer>
+</div>
+{% endblock content %}

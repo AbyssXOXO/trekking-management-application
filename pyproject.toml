@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trekflow"
+version = "0.1.0"
+dependencies = [
+    "flask",
+    "flask-SQLAlchemy",
+    "flask-wtf",
+    "email-validator",
+    "flask-bcrypt",
+    "flask-login",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+trekflow = [
+    "templates/**/*.html",
+    "static/**/*"
+]
