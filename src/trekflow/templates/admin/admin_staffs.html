@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="admin-dashboard min-vh-100">
+  <div class="container-fluid">
+    <div class="row min-vh-100">
+      <aside class="col-12 col-lg-2 admin-sidebar p-3 d-flex flex-column">
+        <div class="d-flex align-items-center gap-2 mb-4">
+          <div>
+            <h6 class="mb-0 fw-semibold">Admin Panel</h6>
+            <small class="text-muted">Management Suite</small>
+          </div>
+        </div>
+        <a href="#" class="btn admin-primary-btn w-100 mb-4">
+          + New Trek
+        </a>
+        <nav class="nav flex-column gap-2">
+          <a class="nav-link admin-nav-link" href="{{ url_for('admindashboard') }}">
+            <span class="material-symbols-outlined admin-nav-icon">dashboard</span>
+            Dashboard
+          </a>
+          <a class="nav-link admin-nav-link" href="#">
+            <span class="material-symbols-outlined admin-nav-icon">mountain_flag</span>
+            Treks
+          </a>
+          <a class="nav-link admin-nav-link active" href="{{ url_for('admin_staff') }}">
+            <span class="material-symbols-outlined admin-nav-icon">supervised_user_circle</span>
+            Staffs
+          </a>
+          <a class="nav-link admin-nav-link" href="#">
+            <span class="material-symbols-outlined admin-nav-icon">group</span>
+            Users
+          </a>
+          <a class="nav-link admin-nav-link" href="#">
+            <span class="material-symbols-outlined admin-nav-icon">date_range</span>
+            Bookings
+          </a>
+          <a class="nav-link admin-nav-link" href="#">
+            <span class="material-symbols-outlined admin-nav-icon">search</span>
+            Search
+          </a>
+          <a class="nav-link admin-nav-link" href="#">
+            <span class="material-symbols-outlined admin-nav-icon">description</span>
+            Reports
+          </a>
+          <a class="nav-link admin-nav-link" href="#">
+            <span class="material-symbols-outlined admin-nav-icon">settings</span>
+            Settings
+          </a>
+          <a class="nav-link admin-nav-link" href="{{ url_for('logout') }}">
+            <span class="material-symbols-outlined admin-nav-icon">logout</span>
+            Logout
+          </a>
+        </nav>
+      </aside>
+      <main class="col-12 col-lg-10 p-0">
+        <header class="admin-topbar d-flex align-items-center justify-content-between px-4 py-3">
+          <a class="navbar-brand home-main-heading fs-2" href="#">TrekFlow</a>
+        </header>
+        <section class="admin-content p-4">
+          <div class="mb-4">
+            <h2 class="fw-bold mb-1">Manage Staffs</h2>
+            <p class="text-muted mb-0">Approve, blacklist and view staffs</p>
+          </div>
+          <div class="card border-0 shadow-sm mb-4 admin-filter-card w-50">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12 col-lg-12">
+                  <input type="search" class="form-control rounded-pill" placeholder="Search by name or ID...">
+                </div>
+              </div>
+            </div>
+          </div>
+          <article class="card border-0 shadow-sm">
+            <div class="card-body">
+            <ul class="nav nav-tabs mb-3" id="staffTabs" role="tablist">
+              <li class="nav-item">
+                <button class="nav-link active" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab">
+                  Pending ({{ pending_staff|length }})
+                </button>
+              </li>
+              <li class="nav-item">
+                <button class="nav-link" id="approved-tab" data-bs-toggle="tab" data-bs-target="#approved" type="button" role="tab">
+                  Approved ({{ approved_staff|length }})
+                </button>
+              </li>
+              <li class="nav-item">
+                <button class="nav-link" id="blacklisted-tab" data-bs-toggle="tab" data-bs-target="#blacklisted" type="button" role="tab">
+                  Blacklisted ({{ blacklisted_staff|length }})
+                </button>
+              </li>
+            </ul>
+              <div>
+                <table class="table table-hover align-middle">
+                  ...
+                </table>
+              </div>
+
+              <div class="tab-pane fade" id="approved" role="tabpanel" aria-labelledby="approved-tab">
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle mb-0">
+                    <thead>
+                      <tr>
+                        <th>Staff ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Username</th>
+                        <th>Status</th>
+                        <th class="text-end">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for staff in approved_staff %}
+                        <tr>
+                          <td>S{{ "%03d"|format(staff.id) }}</td>
+                          <td>{{ staff.fullname }}</td>
+                          <td>{{ staff.email }}</td>
+                          <td>{{ staff.username }}</td>
+                          <td><span class="badge text-bg-success">Approved</span></td>
+                          <td>
+                            <div class="d-flex justify-content-end">
+                              <form method="POST" action="{{ url_for('blacklist_staff', user_id=staff.id) }}">
+                                {{ form.hidden_tag() }}
+                                <button type="submit" class="btn btn-sm btn-danger">Blacklist</button>
+                              </form>
+                            </div>
+                          </td>
+                        </tr>
+                      {% else %}
+                        <tr>
+                          <td colspan="6" class="text-center text-muted py-4">No approved staff yet.</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="blacklisted" role="tabpanel" aria-labelledby="blacklisted-tab">
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle mb-0">
+                    <thead>
+                      <tr>
+                        <th>Staff ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Username</th>
+                        <th>Status</th>
+                        <th class="text-end">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for staff in blacklisted_staff %}
+                        <tr>
+                          <td>S{{ "%03d"|format(staff.id) }}</td>
+                          <td>{{ staff.fullname }}</td>
+                          <td>{{ staff.email }}</td>
+                          <td>{{ staff.username }}</td>
+                          <td><span class="badge text-bg-danger">Blacklisted</span></td>
+                          <td>
+                            <div class="d-flex justify-content-end">
+                              <form method="POST" action="{{ url_for('approve_staff', user_id=staff.id) }}">
+                                {{ form.hidden_tag() }}
+                                <button type="submit" class="btn btn-sm btn-success">Restore</button>
+                              </form>
+                            </div>
+                          </td>
+                        </tr>
+                      {% else %}
+                        <tr>
+                          <td colspan="6" class="text-center text-muted py-4">No blacklisted staff.</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
+{% endblock content %}

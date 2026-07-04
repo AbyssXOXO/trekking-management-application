@@ -14,9 +14,41 @@
           + New Trek
         </a>
         <nav class="nav flex-column gap-2">
-          <a class="nav-link admin-nav-link" href="#">
+          <a class="nav-link admin-nav-link" href="{{ url_for('admindashboard') }}">
             <span class="material-symbols-outlined admin-nav-icon">dashboard</span>
             Dashboard
+          </a>
+          <a class="nav-link admin-nav-link" href="#">
+            <span class="material-symbols-outlined admin-nav-icon">mountain_flag</span>
+            Treks
+          </a>
+          <a class="nav-link admin-nav-link" href="{{ url_for('admin_staff') }}">
+            <span class="material-symbols-outlined admin-nav-icon">supervised_user_circle</span>
+            Staffs
+          </a>
+          <a class="nav-link admin-nav-link" href="#">
+            <span class="material-symbols-outlined admin-nav-icon">group</span>
+            Users
+          </a>
+          <a class="nav-link admin-nav-link" href="#">
+            <span class="material-symbols-outlined admin-nav-icon">date_range</span>
+            Bookings
+          </a>
+          <a class="nav-link admin-nav-link" href="#">
+            <span class="material-symbols-outlined admin-nav-icon">search</span>
+            Search
+          </a>
+          <a class="nav-link admin-nav-link" href="#">
+            <span class="material-symbols-outlined admin-nav-icon">description</span>
+            Reports
+          </a>
+          <a class="nav-link admin-nav-link" href="#">
+            <span class="material-symbols-outlined admin-nav-icon">settings</span>
+            Settings
+          </a>
+          <a class="nav-link admin-nav-link" href="{{ url_for('logout') }}">
+            <span class="material-symbols-outlined admin-nav-icon">logout</span>
+            Logout
           </a>
         </nav>
       </aside>

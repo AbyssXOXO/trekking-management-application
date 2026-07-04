@@ -12,6 +12,7 @@ dependencies = [
     "email-validator",
     "flask-bcrypt",
     "flask-login",
+    "pillow",
 ]
 
 [tool.setuptools.packages.find]

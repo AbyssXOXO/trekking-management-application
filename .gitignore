@@ -9,10 +9,6 @@ venv/
 env/
 ENV/
 
-# Flask / local app data
-instance/
-*.sqlite3
-*.db
 
 # Environment files and secrets
 .env
@@ -37,3 +33,5 @@ Thumbs.db
 build/
 dist/
 *.egg-info/
+
+create_admin.py

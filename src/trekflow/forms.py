@@ -42,9 +42,13 @@ class UpdateProfileForms(FlaskForm):
             user = User.query.filter_by(username = username.data).first()
             if user:
                 raise ValidationError('That username is taken. Please choose a different one.')
-        
+
     def validate_email(self, email):
         if email.data != current_user.email:
             email = User.query.filter_by(email = email.data).first()
             if email:
                 raise ValidationError('That email is already in use. Please try a different one.')
+
+class admin_Staff(FlaskForm):
+    approve = SubmitField('Approve')
+    blacklist = SubmitField('Blacklist')
