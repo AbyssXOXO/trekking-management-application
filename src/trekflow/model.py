@@ -15,7 +15,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(120), nullable=False, default='default.png')
     password = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.Enum("admin", "staff", "trekker"), nullable=False)
+    role = db.Column(db.Enum("admin", "staff", "user"), nullable=False)
     status = db.Column(db.Enum("active", "pending", "blacklist"), nullable=False)
     created_date = db.Column(db.Date, nullable=False, default=date.today)
 

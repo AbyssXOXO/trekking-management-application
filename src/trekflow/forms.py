@@ -1,8 +1,9 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileField
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SelectField, SubmitField
-from wtforms.validators import DataRequired, Length, Email, ValidationError
+from wtforms import StringField, PasswordField, SelectField, SubmitField, TextAreaField, IntegerField
+from wtforms.fields import DateField
+from wtforms.validators import DataRequired, Length, Email, ValidationError, NumberRange
 from .model import User
 
 
@@ -51,4 +52,23 @@ class UpdateProfileForms(FlaskForm):
 
 class admin_Staff(FlaskForm):
     approve = SubmitField('Approve')
+    blacklist = SubmitField('Blacklist')
+
+class AdminTrekForm(FlaskForm):
+    name = StringField('Trek name', validators=[DataRequired(), Length(min=2, max=35)])
+    location = StringField('Location', validators=[DataRequired(), Length(min=2, max=101)])
+    difficulty = SelectField('choose difficulty', choices=[('', '-- Select --'), ('Easy', 'Easy'), ('Moderate', 'Moderate'), ('Hard', 'Hard')], validators=[DataRequired()])
+    duration = IntegerField('Duration (days)', validators=[DataRequired(), NumberRange(min=1)])
+    total_slots = IntegerField('Total Slots', validators=[DataRequired(), NumberRange(min=1)])
+    available_slots = IntegerField('Available Slots', validators=[DataRequired(), NumberRange(min=1)])
+    trek_status = SelectField('Trek Status', choices=[('', '--Select--'), ('Pending', 'Pending'), ('Approved', 'Approved'), ('Open', 'Open'), ('Closed', 'Closed'), ('Completed', 'Completed')], validators=[DataRequired()])
+    price = IntegerField('Price', validators=[DataRequired(), NumberRange(min=1)])
+    description = TextAreaField('Description', validators=[DataRequired()])
+    start_date = DateField("Start Date", format="%Y-%m-%d", validators=[DataRequired()])
+    end_date = DateField("End Date", format="%Y-%m-%d", validators=[DataRequired()])
+    assigned_staff = SelectField('Assign Staff', coerce=int, validators=[DataRequired(message='Please select a staff member.')])
+    submit = SubmitField('Save')
+
+class admin_Users(FlaskForm):
+    activate = SubmitField('Activate')
     blacklist = SubmitField('Blacklist')

@@ -192,7 +192,7 @@ button.btn.submit-button:focus:active {
 .admin-table-head,
 .admin-trek-row {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 0.7fr 1fr 1fr;
+  grid-template-columns: 1.4fr 0.8fr 1fr 0.8fr 1fr 1fr;
   align-items: center;
   gap: 1rem;
 }

@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="admin-dashboard min-vh-100">
+  <div class="container-fluid">
+    <div class="row min-vh-100">
+      <aside class="col-12 col-lg-2 admin-sidebar p-3 d-flex flex-column">
+        <div class="d-flex align-items-center gap-2 mb-4">
+          <div>
+            <h6 class="mb-0 fw-semibold">Admin Panel</h6>
+            <small class="text-muted">Management Suite</small>
+          </div>
+        </div>
+        <a href="{{ url_for('admin_trek') }}" class="btn admin-primary-btn w-100 mb-4">
+          + New Trek
+        </a>
+        <nav class="nav flex-column gap-2">
+          <a class="nav-link admin-nav-link" href="{{ url_for('admindashboard') }}">
+            <span class="material-symbols-outlined admin-nav-icon">dashboard</span>
+            Dashboard
+          </a>
+          <a class="nav-link admin-nav-link active" href="{{ url_for('view_treks') }}">
+            <span class="material-symbols-outlined admin-nav-icon">mountain_flag</span>
+            Treks
+          </a>
+          <a class="nav-link admin-nav-link" href="{{ url_for('admin_staff') }}">
+            <span class="material-symbols-outlined admin-nav-icon">supervised_user_circle</span>
+            Staffs
+          </a>
+          <a class="nav-link admin-nav-link" href="{{ url_for('admin_users') }}">
+            <span class="material-symbols-outlined admin-nav-icon">group</span>
+            Users
+          </a>
+          <a class="nav-link admin-nav-link" href="#">
+            <span class="material-symbols-outlined admin-nav-icon">date_range</span>
+            Bookings
+          </a>
+          <a class="nav-link admin-nav-link" href="{{ url_for('logout') }}">
+            <span class="material-symbols-outlined admin-nav-icon">logout</span>
+            Logout
+          </a>
+        </nav>
+      </aside>
+      <main class="col-12 col-lg-10 p-0">
+        <header class="admin-topbar d-flex align-items-center justify-content-between px-4 py-3">
+          <a class="navbar-brand home-main-heading fs-2" href="#">TrekFlow</a>
+        </header>
+        <section class="admin-content p-4">
+          <div class="mb-4">
+            <h2 class="fw-bold mb-1">Manage Treks</h2>
+            <p class="text-muted mb-0">View, edit, and organize expedition routes.</p>
+          </div>
+          <div class="card border-0 shadow-sm mb-4 admin-filter-card">
+            <div class="card-body">
+              <div class="row g-3 align-items-center">
+                <form method="GET" action="{{ url_for('view_treks') }}" class="row g-3 align-items-center">
+                  <div class="col-12 col-md-6">
+                    <input type="search" name="q" value="{{ request.args.get('q', '') }}" class="form-control rounded-pill" placeholder="Search by name or ID...">
+                  </div>
+
+                  <div class="col-6 col-md-3">
+                    <select name="difficulty" class="form-select rounded-pill">
+                      <option value="">Difficulty</option>
+                      <option value="Easy">Easy</option>
+                      <option value="Moderate">Moderate</option>
+                      <option value="Hard">Hard</option>
+                    </select>
+                  </div>
+
+                  <div class="col-6 col-md-3">
+                    <select name="status" class="form-select rounded-pill">
+                      <option value="">Status</option>
+                      <option value="Pending">Pending</option>
+                      <option value="Approved">Approved</option>
+                      <option value="Open">Open</option>
+                      <option value="Closed">Closed</option>
+                      <option value="Completed">Completed</option>
+                    </select>
+                  </div>
+
+                  <div class="col-12">
+                    <button class="btn btn-success" type="submit">Search</button>
+                    <a href="{{ url_for('view_treks') }}" class="btn btn-light border">Clear</a>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="d-none d-lg-grid admin-table-head px-4 mb-2">
+            <span>Trek Name</span>
+            <span>Status</span>
+            <span>Location</span>
+            <span>Difficulty</span>
+            <span>Staff Assigned</span>
+            <span class="text-end">Actions</span>
+          </div>
+          {% for trek in treks %}
+            <div class="gap-3 mt-2">
+              <article class="card border-0 shadow-sm admin-trek-card">
+                <div class="card-body admin-trek-row">
+                  <div class="d-flex align-items-center gap-3">
+                    <div>
+                      <h6 class="mb-0 fw-bold">{{ trek.trek_name }}</h6>
+                      <small class="text-muted">TRK-{{ "%03d"|format(trek.trek_id) }}</small>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center gap-2">
+                    <small class="text-muted">{{ trek.trek_status }}</small>
+                  </div>
+                  <div class="admin-mobile-label">
+                    <span class="d-lg-none text-muted small">Location</span>
+                    {{ trek.location }}
+                  </div>
+                  {% if trek.difficulty=='Easy' %}
+                    <div>
+                      <span class="badge bg-success-subtle text-success-emphasis">{{ trek.difficulty }}</span>
+                    </div>
+                  {% elif trek.difficulty=='Moderate' %}
+                    <div>
+                      <span class="badge bg-warning-subtle text-warning-emphasis">{{ trek.difficulty }}</span>
+                    </div>
+                  {% else %}
+                    <div>
+                      <span class="badge bg-danger-subtle text-danger-emphasis">{{ trek.difficulty }}</span>
+                    </div>
+                  {% endif %}
+                  <div class="d-flex align-items-center gap-2">
+                    <small class="text-muted">{{ trek.staff.username }}</small>
+                  </div>
+                  <div class="d-flex justify-content-lg-end gap-2">
+                    <a class="btn btn-sm btn-warning border" href="{{ url_for('edit_treks', trek_id=trek.trek_id) }}">Edit</a>
+                    <form method="POST" action="{{ url_for('delete_trek', trek_id=trek.trek_id) }}">
+                      <button class="btn btn-sm btn-outline-danger" type="submit">
+                        Close
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </article>
+            </div>
+          {% endfor %}
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
+{% endblock content %}

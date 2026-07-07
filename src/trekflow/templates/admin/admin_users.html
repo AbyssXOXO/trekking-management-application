@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="admin-dashboard min-vh-100">
+  <div class="container-fluid">
+    <div class="row min-vh-100">
+      <aside class="col-12 col-lg-2 admin-sidebar p-3 d-flex flex-column">
+        <div class="d-flex align-items-center gap-2 mb-4">
+          <div>
+            <h6 class="mb-0 fw-semibold">Admin Panel</h6>
+            <small class="text-muted">Management Suite</small>
+          </div>
+        </div>
+        <a href="{{ url_for('admin_trek') }}" class="btn admin-primary-btn w-100 mb-4">
+          + New Trek
+        </a>
+        <nav class="nav flex-column gap-2">
+          <a class="nav-link admin-nav-link" href="{{ url_for('admindashboard') }}">
+            <span class="material-symbols-outlined admin-nav-icon">dashboard</span>
+            Dashboard
+          </a>
+          <a class="nav-link admin-nav-link" href="{{ url_for('view_treks') }}">
+            <span class="material-symbols-outlined admin-nav-icon">mountain_flag</span>
+            Treks
+          </a>
+          <a class="nav-link admin-nav-link" href="{{ url_for('admin_staff') }}">
+            <span class="material-symbols-outlined admin-nav-icon">supervised_user_circle</span>
+            Staffs
+          </a>
+          <a class="nav-link admin-nav-link active" href="{{ url_for('admin_users') }}">
+            <span class="material-symbols-outlined admin-nav-icon">group</span>
+            Users
+          </a>
+          <a class="nav-link admin-nav-link" href="#">
+            <span class="material-symbols-outlined admin-nav-icon">date_range</span>
+            Bookings
+          </a>
+          <a class="nav-link admin-nav-link" href="{{ url_for('logout') }}">
+            <span class="material-symbols-outlined admin-nav-icon">logout</span>
+            Logout
+          </a>
+        </nav>
+      </aside>
+      <main class="col-12 col-lg-10 p-0">
+        <header class="admin-topbar d-flex align-items-center justify-content-between px-4 py-3">
+          <a class="navbar-brand home-main-heading fs-2" href="#">TrekFlow</a>
+        </header>
+        <section class="admin-content p-4">
+          <div class="mb-4">
+            <h2 class="fw-bold mb-1">Manage Users</h2>
+            <p class="text-muted mb-0">Activate, blacklist and view users</p>
+          </div>
+          <div class="card border-0 shadow-sm mb-4 admin-filter-card w-50">
+            <div class="card-body">
+              <div class="d-flex justify-content-between gap-4">
+                <form method="GET" action="{{ url_for('admin_users') }}" class="d-flex gap-2 align-items-center">
+                  <input type="search" name="q" value="{{ request.args.get('q', '') }}" class="form-control rounded-pill" placeholder="Search by name or ID...">
+                  <button class="btn btn-success" type="submit">Search</button>
+                  <a href="{{ url_for('admin_users') }}" class="btn btn-light border">Clear</a>
+                </form>
+              </div>
+            </div>
+          </div>
+          {% if user_results is not none %}
+            <h5>Search Results</h5>
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Username</th>
+                    <th>Status</th>
+                    <th class="text-end">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for user in user_results %}
+                    <tr>
+                      <td>S{{ "%03d"|format(user.id) }}</td>
+                      <td>{{ user.fullname }}</td>
+                      <td>{{ user.email }}</td>
+                      <td>{{ user.username }}</td>
+                      <td>
+                        {% if user.status == "active" %}
+                          <span class="badge bg-success-subtle text-success-emphasis">Active</span>
+                        {% else %}
+                          <span class="badge bg-danger-subtle text-danger-emphasis">Blacklisted</span>
+                        {% endif %}
+                      </td>
+                      <td class="text-end">
+                        {% if user.status == "active" %}
+                          <div class="d-flex justify-content-end">
+                            <form method="POST" action="{{ url_for('blacklist_user', user_id=user.id) }}">
+                              {{ form.hidden_tag() }}
+                              {{ form.blacklist(class="btn btn-sm btn-danger") }}
+                            </form>
+                          </div>
+                        {% else %}
+                          <form method="POST" action="{{ url_for('approve_staff', user_id=user.id) }}">
+                            {{ form.hidden_tag() }}
+                            {{ form.activate(class="btn btn-sm btn-success") }}
+                          </form>
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% else %}
+                    <tr>
+                      <td colspan="6" class="text-center text-muted py-4">
+                        No user found.
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <article class="card border-0 shadow-sm">
+              <div class="card-body">
+                <ul class="nav nav-tabs mb-3" id="usersTabs" role="tablist">
+                  <li class="nav-item">
+                    <button class="nav-link active" id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button" role="tab">
+                      Active ({{ active_user|length }})
+                    </button>
+                  </li>
+                  <li class="nav-item">
+                    <button class="nav-link" id="blacklisted-tab" data-bs-toggle="tab" data-bs-target="#blacklisted" type="button" role="tab">
+                      Blacklisted ({{ blacklisted_user|length }})
+                    </button>
+                  </li>
+                </ul>
+
+                <div class="tab-content" id="usersTabsContent">
+                  <div class="tab-pane fade show active" id="active" role="tabpanel" aria-labelledby="active-tab">
+                    <div class="table-responsive">
+                      <table class="table table-hover align-middle mb-0">
+                        <thead>
+                          <tr>
+                            <th>User ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Username</th>
+                            <th>Status</th>
+                            <th class="text-end">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for user in active_user %}
+                            <tr>
+                              <td>U{{ "%03d"|format(user.id) }}</td>
+                              <td>{{ user.fullname }}</td>
+                              <td>{{ user.email }}</td>
+                              <td>{{ user.username }}</td>
+                              <td><span class="badge bg-success-subtle text-success-emphasis">Active</span></td>
+                              <td>
+                                <div class="d-flex justify-content-end">
+                                  <form method="POST" action="{{ url_for('blacklist_user', user_id=user.id) }}">
+                                    {{ form.hidden_tag() }}
+                                    {{ form.blacklist(class="btn btn-sm btn-danger") }}
+                                  </form>
+                                </div>
+                              </td>
+                            </tr>
+                          {% else %}
+                            <tr>
+                              <td colspan="6" class="text-center text-muted py-4">No active user yet.</td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <div class="tab-pane fade" id="blacklisted" role="tabpanel" aria-labelledby="blacklisted-tab">
+                    <div class="table-responsive">
+                      <table class="table table-hover align-middle mb-0">
+                        <thead>
+                          <tr>
+                            <th>User ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Username</th>
+                            <th>Status</th>
+                            <th class="text-end">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for user in blacklisted_user %}
+                            <tr>
+                              <td>U{{ "%03d"|format(user.id) }}</td>
+                              <td>{{ user.fullname }}</td>
+                              <td>{{ user.email }}</td>
+                              <td>{{ user.username }}</td>
+                              <td><span class="badge bg-danger-subtle text-danger-emphasis">Blacklisted</span></td>
+                              <td>
+                                <div class="d-flex justify-content-end">
+                                  <form method="POST" action="{{ url_for('activate_user', user_id=user.id) }}">
+                                    {{ form.hidden_tag() }}
+                                    {{ form.activate(class="btn btn-sm btn-success") }}
+                                  </form>
+                                </div>
+                              </td>
+                            </tr>
+                          {% else %}
+                            <tr>
+                              <td colspan="6" class="text-center text-muted py-4">No blacklisted user.</td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          {% endif %}
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
+{% endblock content %}
