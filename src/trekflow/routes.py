@@ -1,7 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, abort 
-from sqlalchemy import or_
 
-from .model import User, Trek, Booking, StaffProfile
+from .model import User, Trek, Booking
 from trekflow import app, db, bcrypt
 from .forms import RegistrationForms, LoginForms, UpdateProfileForms, admin_Staff, AdminTrekForm, admin_Users, BookingForm, CancelBookingForm, CloseTrekForm, ManageTreks
 from flask_login import login_user, current_user, logout_user, login_required
@@ -132,7 +131,7 @@ def treks():
     form = BookingForm()
     difficulty = request.args.get("difficulty", "").strip()
     location = request.args.get("location", "").strip()
-    treks_query = Trek.query.filter_by(trek_status="Open")
+    treks_query = Trek.query.filter(Trek.trek_status.in_(["Open", "Closed", "Started", "Ongoing"]))
     if difficulty:
         treks_query = treks_query.filter_by(difficulty=difficulty)
     if location:
@@ -171,7 +170,7 @@ def book_trek(trek_id):
 def mybooking():
     if current_user.role != "user":
         return redirect(url_for('home'))
-    bookings = (Booking.query.join(Trek).filter(Booking.trekker_id==current_user.id, Booking.booking_status=="Booked", db.or_(Trek.trek_status=="Open", Trek.trek_status=="Closed")).all())
+    bookings = (Booking.query.join(Trek).filter(Booking.trekker_id==current_user.id, Booking.booking_status=="Booked", db.or_(Trek.trek_status=="Open", Trek.trek_status=="Closed", Trek.trek_status=="Started", Trek.trek_status=="Ongoing")).all())
     return render_template("trekker/mybooking.html", title="My Bookings", bookings=bookings)
 
 @app.route("/booking/<int:booking_id>/details", methods=['GET'])
