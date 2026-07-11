@@ -1,23 +1,80 @@
-import os
-import secrets
+from flask import render_template, flash, redirect, url_for, request, abort 
 from sqlalchemy import or_
-from PIL import Image
-from flask import render_template, flash, redirect, url_for, request, abort
 
 from .model import User, Trek, Booking, StaffProfile
 from trekflow import app, db, bcrypt
-from .forms import RegistrationForms, LoginForms, UpdateProfileForms, admin_Staff, AdminTrekForm, admin_Users
+from .forms import RegistrationForms, LoginForms, UpdateProfileForms, admin_Staff, AdminTrekForm, admin_Users, BookingForm, CancelBookingForm, CloseTrekForm, ManageTreks
 from flask_login import login_user, current_user, logout_user, login_required
+from .utils import save_picture
 
 
-@app.route("/", methods=['POST', 'GET'])
+@app.route("/", methods=['GET'])
 def home():
     return render_template('home.html', title='Home')
 
-@app.route("/staffdashboard", methods=['GET', 'POST'])
+@app.route("/staffdashboard", methods=['GET'])
 @login_required
 def staffdashboard():
-    return render_template('staff/staffdashboard.html', title='Staff')
+    if current_user.role != "staff":
+        return redirect(url_for('home'))
+    assigned_treks = Trek.query.filter_by(assigned_staff_id=current_user.id).order_by(Trek.start_date.asc()).all()
+    open_treks = sum(1 for trek in assigned_treks if trek.trek_status == "Open")
+    bookings = (Booking.query.join(Trek).filter(Trek.assigned_staff_id == current_user.id, Booking.booking_status == "Booked").all())
+    trekkers = [booking.trekker for booking in bookings]
+    return render_template('staff/staffdashboard.html', title='Staff', assigned_treks=assigned_treks, open_treks=open_treks, trekkers=trekkers)
+
+@app.route("/staffdashboard/treks", methods=['GET'])
+@login_required
+def stafftreks():                
+    if current_user.role != "staff":
+        return redirect(url_for('home'))
+    form = ManageTreks()
+    treks = Trek.query.filter_by(assigned_staff_id=current_user.id).order_by(Trek.start_date.asc()).all()
+    return render_template('staff/stafftreks.html', title='Assigned Treks', treks=treks, form=form)
+
+@app.route("/staffdashboard/<int:trek_id>/manage", methods=['GET', 'POST'])
+@login_required
+def staffmanagetreks(trek_id):                
+    if current_user.role != "staff":
+        return redirect(url_for('home'))
+    form = ManageTreks()
+    trek = Trek.query.filter_by(trek_id=trek_id, assigned_staff_id=current_user.id).first_or_404()
+    bookings = Booking.query.filter_by(trek_id=trek.trek_id, booking_status="Booked").order_by(Booking.booking_date.asc()).all()
+    if form.validate_on_submit():
+        if form.available_slots.data > trek.total_slots:
+            flash("Available slots cannot be more than total slots", "warning")
+            return redirect(url_for('staffmanagetreks', trek_id=trek.trek_id))
+        trek.available_slots = form.available_slots.data
+        trek.trek_status = form.trek_status.data
+        db.session.commit()
+        flash("Trek updated successfully.", "success")
+        return redirect(url_for("staffmanagetreks", trek_id=trek.trek_id))
+    elif request.method == "GET":
+        form.available_slots.data = trek.available_slots
+        form.trek_status.data = trek.trek_status
+    return render_template('staff/manage_treks.html', title='Manage Trek', trek=trek, bookings=bookings, form=form)
+
+@app.route("/staffdashboard/profile", methods=['GET', 'POST'])
+@login_required
+def staffprofile():                
+    form = UpdateProfileForms()
+    if form.validate_on_submit():
+        if form.pfp.data:
+            pfp_file = save_picture(form.pfp.data)
+            current_user.image_file = pfp_file
+        current_user.username = form.username.data
+        current_user.fullname = form.fullname.data
+        current_user.email = form.email.data
+        db.session.commit()
+        flash('Your account has been updated!', 'success')
+        return redirect (url_for('staffprofile'))
+    elif request.method == 'GET':
+        form.fullname.data = current_user.fullname  
+        form.username.data = current_user.username
+        form.email.data = current_user.email 
+    image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
+    return render_template('staff/profile.html', title='Profile', image_file=image_file, form=form)
+
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -31,6 +88,7 @@ def login():
                 flash('Your staff account is waiting for admin approval.', 'warning')
                 return redirect(url_for('login'))
             login_user(user)
+            flash('Login successful.', 'success')
             next_page = request.args.get('next')
             if next_page:
                 return redirect (next_page) if next_page else redirect(url_for('home'))
@@ -69,20 +127,68 @@ def logout():
 @app.route("/treks", methods=['GET', 'POST'])
 @login_required
 def treks():
-    return render_template('trekker/treks.html', title='Treks')
+    if current_user.role != 'user':
+        return redirect(url_for('home'))
+    form = BookingForm()
+    difficulty = request.args.get("difficulty", "").strip()
+    location = request.args.get("location", "").strip()
+    treks_query = Trek.query.filter_by(trek_status="Open")
+    if difficulty:
+        treks_query = treks_query.filter_by(difficulty=difficulty)
+    if location:
+        treks_query = treks_query.filter_by(location=location)
+    treks = treks_query.order_by(Trek.start_date.asc()).all()
+    locations = [row[0] for row in db.session.query(Trek.location).filter_by(trek_status="Open").distinct().order_by(Trek.location.asc()).all()]
+    return render_template('trekker/treks.html', title='Treks', form=form, treks=treks, locations=locations, selected_difficulty = difficulty, selected_location = location)
 
-def save_picture(form_picture): #for getting the ext and file name for pfp
-    random_hex = secrets.token_hex(16)
-    _, f_ext = os.path.splitext(form_picture.filename)
-    pfp_fn = random_hex + f_ext 
-    pfp_path = os.path.join(app.root_path, 'static/profile_pics', pfp_fn)
+@app.route("/treks/<int:trek_id>/book", methods=['POST'])
+@login_required
+def book_trek(trek_id):
+    if current_user.role != "user":
+        return redirect(url_for('home'))
+    form = BookingForm()
+    if form.validate_on_submit():
+        trek = Trek.query.get_or_404(trek_id)
+        if trek.trek_status != "Open":
+            flash("This trek is not open for booking.", "warning")
+            return redirect(url_for("treks"))
+        if trek.available_slots <= 0:
+            flash("No slots available for this trek.", "danger")
+            return redirect(url_for("treks"))
+        existing_booking = Booking.query.filter_by(trekker_id=current_user.id, trek_id=trek.trek_id, booking_status ="Booked").first()
+        if existing_booking:
+            flash("You have already booked this trek.", "info")
+            return redirect(url_for('treks'))
+        booking = Booking(trekker_id=current_user.id, trek_id=trek.trek_id, booking_status="Booked")     #type: ignore
+        trek.available_slots -= 1
+        db.session.add(booking)
+        db.session.commit()
+        flash("Trek booked successfully!", "success")
+    return redirect(url_for('treks'))
 
-    output_size = (120, 120)
-    i = Image.open(form_picture)
-    i.thumbnail(output_size)
-    i.save(pfp_path)
+@app.route("/booking", methods=['GET'])
+@login_required
+def mybooking():
+    if current_user.role != "user":
+        return redirect(url_for('home'))
+    bookings = (Booking.query.join(Trek).filter(Booking.trekker_id==current_user.id, Booking.booking_status=="Booked", db.or_(Trek.trek_status=="Open", Trek.trek_status=="Closed")).all())
+    return render_template("trekker/mybooking.html", title="My Bookings", bookings=bookings)
 
-    return pfp_fn #to return the name to be saved in db
+@app.route("/booking/<int:booking_id>/details", methods=['GET'])
+@login_required
+def viewbooking(booking_id):
+    if current_user.role != "user":
+        return redirect(url_for('home'))
+    booking = Booking.query.filter_by(booking_id=booking_id, trekker_id=current_user.id).first_or_404()
+    return render_template('trekker/viewbooking.html', title='Booking Details', booking=booking)
+
+@app.route("/history", methods=['GET'])
+@login_required
+def history():
+    if current_user.role != "user":
+        return redirect(url_for('home'))
+    bookings = (Booking.query.join(Trek).filter(Booking.trekker_id==current_user.id, Booking.booking_status=="Booked", Trek.trek_status=="Completed").all())
+    return render_template("trekker/bookinghistory.html", title="History", bookings=bookings)
 
 @app.route("/profile", methods=['POST', 'GET'])
 @login_required
@@ -199,6 +305,7 @@ def adding_trek():
 def view_treks():
     if current_user.role != "admin":
         abort(404)
+    form = CloseTrekForm()
     q = request.args.get('q', '').strip()
     difficulty = request.args.get('difficulty', '').strip()
     status = request.args.get('status', '').strip()
@@ -212,9 +319,8 @@ def view_treks():
         treks_query = treks_query.filter_by(difficulty=difficulty)
     if status:
         treks_query = treks_query.filter_by(trek_status=status)
-
     treks = treks_query.order_by(Trek.trek_id.desc()).all()
-    return render_template('admin/admin_treks.html', title='Treks', treks=treks)
+    return render_template('admin/admin_treks.html', title='Treks', treks=treks, form=form)
 
 @app.route("/admindashboard/treks/<int:trek_id>/edit", methods=['GET', 'POST'])
 @login_required
@@ -261,12 +367,12 @@ def edit_treks(trek_id):
 def delete_trek(trek_id):
     if current_user.role != "admin":
         return redirect(url_for('home'))
-
-    trek = Trek.query.get_or_404(trek_id)
-    trek.trek_status = 'Closed'
-    db.session.commit()
-
-    flash("Trek deleted successfully", "danger")
+    form = CloseTrekForm()
+    if form.validate_on_submit():
+        trek = Trek.query.get_or_404(trek_id)
+        trek.trek_status = 'Closed'
+        db.session.commit()
+        flash("Trek deleted successfully", "danger")
     return redirect(url_for("view_treks"))
 
 @app.route("/admindashboard/users", methods=['GET', 'POST'])
@@ -317,3 +423,29 @@ def blacklist_user(user_id):
         db.session.commit()
         flash(f'{user.username} has been blacklisted.', 'danger')
     return redirect(url_for('admin_users'))
+
+@app.route("/admindashboard/bookings", methods=['GET'])
+@login_required
+def booking_admin():
+    if current_user.role != "admin":
+        return abort(404)
+    form = CancelBookingForm()
+    bookings = Booking.query.order_by(Booking.booking_date.desc()).all()
+    return render_template("admin/admin_booking.html", title="Bookings", bookings=bookings, form=form)
+
+@app.route("/admindashboard/bookings/<int:booking_id>/cancel", methods=["POST"])
+@login_required
+def admin_cancel_booking(booking_id):
+    if current_user.role != "admin":
+        abort(404)
+    form = CancelBookingForm()
+    if form.validate_on_submit():
+        booking = Booking.query.get_or_404(booking_id)
+        if booking.booking_status == "Cancelled":
+            flash("Booking is already cancelled.", "info")
+            return redirect(url_for("booking_admin"))
+        booking.booking_status = "Cancelled"
+        booking.trek.available_slots += 1
+        db.session.commit()
+        flash("Booking cancelled successfully.", "success")
+    return redirect(url_for("booking_admin"))

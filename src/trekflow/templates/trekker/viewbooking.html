@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="admin-dashboard min-vh-100">
+  <div class="container-fluid">
+    <div class="row min-vh-100">
+      <aside class="col-12 col-lg-2 admin-sidebar p-3 d-flex flex-column">
+        <div class="d-flex align-items-center gap-2 mb-4">
+          <div>
+            <h6 class="mb-0 fw-semibold">User Space</h6>
+            <small class="text-muted">Every Trail tells a story</small>
+          </div>
+        </div>
+        <nav class="nav flex-column gap-2">
+          <a class="nav-link admin-nav-link" href="{{ url_for('treks') }}">
+            <span class="material-symbols-outlined admin-nav-icon">mountain_flag</span>
+            My Treks
+          </a>
+          <a class="nav-link admin-nav-link" href="{{ url_for('mybooking') }}">
+            <span class="material-symbols-outlined admin-nav-icon">event_available</span>
+            My booking
+          </a>
+          <a class="nav-link admin-nav-link" href="{{ url_for('history') }}">
+            <span class="material-symbols-outlined admin-nav-icon">group</span>
+            History
+          </a>
+          <a class="nav-link admin-nav-link" href="{{ url_for('profile') }}">
+            <span class="material-symbols-outlined admin-nav-icon">date_range</span>
+            Profile
+          </a>
+          <a class="nav-link admin-nav-link" href="{{ url_for('logout') }}">
+            <span class="material-symbols-outlined admin-nav-icon">logout</span>
+            Logout
+          </a>
+        </nav>
+      </aside>
+      <main class="col-12 col-lg-10 p-0">
+        <header class="admin-topbar d-flex align-items-center justify-content-between px-4 py-3">
+          <a class="navbar-brand home-main-heading fs-2" href="{{ url_for('home') }}">TrekFlow</a>
+        </header>
+        <section class="admin-content p-4">
+          <article class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+              <h4 class="fw-bold mb-4">Trek details</h4>
+              <div class="row">
+                <div class="col-12 col-lg-8">
+                  <p><strong>Trek Name:</strong> {{ booking.trek.trek_name }}</p>
+                  <p><strong>Location:</strong> {{ booking.trek.location }}</p>
+                  <p><strong>Difficulty:</strong> {{ booking.trek.difficulty }}</p>
+                  <p><strong>Duration:</strong> {{ booking.trek.duration }} days</p>
+                  <p><strong>Price:</strong> {{ booking.trek.price }} $</p>
+                  <p><strong>Start Date:</strong> {{ booking.trek.start_date }}</p>
+                  <p><strong>End Date:</strong> {{ booking.trek.end_date }}</p>
+                  <p><strong>Status:</strong> {{ booking.trek.trek_status }}</p>
+                  <p><strong>Staff:</strong> {{ booking.trek.staff.fullname }}</p>
+                </div>
+                <div class="col-12 col-lg-4 border-start ps-lg-4 mt-4 mt-lg-0">
+                  <h6 class="fw-bold mb-3 fs-3">Booking Info</h6>
+                  <p class="mb-2">
+                    <strong>Booking Status:</strong><br>
+                    <span class="text-muted">{{ booking.booking_status }}</span>
+                  </p>
+                  <p class="mb-0">
+                    <strong>Booking Date:</strong><br>
+                    <span class="text-muted">{{ booking.booking_date }}</span>
+                  </p>
+                </div>
+              </div>
+              <hr>
+              <div>
+                <h6 class="fw-bold">Description</h6>
+                <p class="text-muted mb-0">{{ booking.trek.description }}</p>
+              </div>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
+{% endblock content %}

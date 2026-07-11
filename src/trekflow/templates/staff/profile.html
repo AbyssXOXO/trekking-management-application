@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="admin-dashboard min-vh-100">
+  <div class="container-fluid">
+    <div class="row min-vh-100">
+      <aside class="col-12 col-lg-2 admin-sidebar p-3 d-flex flex-column">
+        <div class="d-flex align-items-center gap-2 mb-4">
+          <div>
+            <h6 class="mb-0 fw-semibold">Staff Panel</h6>
+            <small class="text-muted">Trek Assignments</small>
+          </div>
+        </div>
+        <nav class="nav flex-column gap-2">
+          <a class="nav-link admin-nav-link" href="{{ url_for('staffdashboard') }}">
+            <span class="material-symbols-outlined admin-nav-icon">dashboard</span>
+            Dashboard
+          </a>
+          <a class="nav-link admin-nav-link" href="{{ url_for('stafftreks') }}">
+            <span class="material-symbols-outlined admin-nav-icon">mountain_flag</span>
+            My Treks
+          </a>
+          <a class="nav-link admin-nav-link active" href="{{ url_for('staffprofile') }}">
+            <span class="material-symbols-outlined admin-nav-icon">person</span>
+            Profile
+          </a>
+          <a class="nav-link admin-nav-link" href="{{ url_for('logout') }}">
+            <span class="material-symbols-outlined admin-nav-icon">logout</span>
+            Logout
+          </a>
+        </nav>
+      </aside>
+      <main class="col-12 col-lg-10 p-0">
+        <header class="admin-topbar d-flex align-items-center justify-content-between px-4 py-3">
+          <a class="navbar-brand home-main-heading fs-2" href="{{ url_for('home') }}">TrekFlow</a>
+        </header>
+        <section class="admin-content p-4">
+          <div class="d-flex">
+            <div class="flex-shrink-0">
+              <img src="{{ image_file }}" alt="Default Profile Picture" class="rounded-circle object-fit-cover" width="120" height="120">
+            </div>
+            <div class="flex-grow-1 ms-3">
+              <h2 class="media-body">{{ current_user.username }}</h2>
+              <p class="my-1">{{ current_user.fullname }}</p>
+              <p class="my-1">{{ current_user.email }}</p>
+            </div>
+          </div>
+          <div class="d-flex col-md-10 justify-content-start mx-3">
+            <div class="nunito-sans-box">
+              <h2>Account Info</h2>
+              <form method="post" action="" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <div class="d-flex gap-2">
+                  <div class="mb-3 flex-fill">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                      <span class="material-symbols-outlined">account_circle</span>
+                      {{ form.fullname.label(class="form-label mb-0") }}
+                    </div>
+                    {{ form.fullname(class="form-control input-box rounded-4", autocomplete="off") }}
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" width="22" height="22" fill="#4a4e4a">
+                    <path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-32q0-34 17.5-62.5T226-298q62-31 126-46.5T480-360q64 0 128 15.5T734-298q31 15 48.5 43.5T800-192v32H160Zm60-60h520v-12q0-13-7.5-24.5T712-274q-51-26-109-39t-123-13q-65 0-123 13t-109 29q-13 7-20.5 18.5T160-242v12Zm260-320q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29Zm0-100Zm0 420Z"/>
+                  </svg>
+                  {{ form.username.label(class="form-label mb-0") }}
+                  {{ form.username(class="form-control input-box rounded-4", autocomplete="off") }}
+                  {% for error in form.username.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                  {% endfor %}
+                </div>
+                <div class="mb-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" width="22" height="22" fill="#4a4e4a">
+                    <path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0-33-23.5 56.5T800-160H160Zm320-280L160-665v425h640v-425L480-440Zm0-80 318-200H162l318 200ZM160-665v-55 480-425Z"/>
+                  </svg>
+                  {{ form.email.label(class="form-label mb-0") }}
+                  {{ form.email(class="form-control input-box rounded-4", autocomplete="off")}}
+                  {% for error in form.email.errors %}
+                    <span class="text-danger">{{ error }}</span></br>
+                  {% endfor %}
+                </div>
+                <div>
+                  {{ form.pfp.label(class="form-label mb-0") }}
+                  {{ form.pfp(class="form-control") }}
+                  {% if form.pfp.errors %}
+                    {% for error in form.pfp.errors %}
+                      <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                  {% endif %}
+                </div>
+                <div class="text-center mt-4">
+                  {{ form.submit(class="btn submit-button w-100 rounded-4") }}
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="admin-dashboard min-vh-100">
+  <div class="container-fluid">
+    <div class="row min-vh-100">
+      <aside class="col-12 col-lg-2 admin-sidebar p-3 d-flex flex-column">
+        <div class="d-flex align-items-center gap-2 mb-4">
+          <div>
+            <h6 class="mb-0 fw-semibold">User Space</h6>
+            <small class="text-muted">Every Trail tells a story</small>
+          </div>
+        </div>
+        <nav class="nav flex-column gap-2">
+          <a class="nav-link admin-nav-link" href="{{ url_for('treks') }}">
+            <span class="material-symbols-outlined admin-nav-icon">mountain_flag</span>
+            My Treks
+          </a>
+          <a class="nav-link admin-nav-link active" href="{{ url_for('mybooking') }}">
+            <span class="material-symbols-outlined admin-nav-icon">event_available</span>
+            My booking
+          </a>
+          <a class="nav-link admin-nav-link" href="{{ url_for('history') }}">
+            <span class="material-symbols-outlined admin-nav-icon">group</span>
+            History
+          </a>
+          <a class="nav-link admin-nav-link" href="{{ url_for('profile') }}">
+            <span class="material-symbols-outlined admin-nav-icon">date_range</span>
+            Profile
+          </a>
+          <a class="nav-link admin-nav-link" href="{{ url_for('logout') }}">
+            <span class="material-symbols-outlined admin-nav-icon">logout</span>
+            Logout
+          </a>
+        </nav>
+      </aside>
+      <main class="col-12 col-lg-10 p-0">
+        <header class="admin-topbar d-flex align-items-center justify-content-between px-4 py-3">
+          <a class="navbar-brand home-main-heading fs-2" href="{{ url_for('home') }}">TrekFlow</a>
+        </header>
+        <section class="admin-content p-4">
+          <div class="mb-4">
+            <h2 class="fw-bold mb-1">Trek Bookings.</h2>
+            <p class="text-muted mb-0">See your current Bookings for future treks.</p>
+          </div>
+          <div class="d-none d-lg-grid admin-table-head px-4 mb-2">
+            <span>Trek Name</span>
+            <span>Location</span>
+            <span>Difficulty</span>
+            <span>Duration</span>
+            <span>Trek Staff</span>
+            <span class="text-end">Action</span>
+          </div>
+          <div>
+            {% for booking in bookings %}
+              <div class="gap-3 mt-2">
+                <article class="card border-0 shadow-sm admin-trek-card">
+                  <div class="card-body admin-trek-row">
+                    <div class="d-flex align-items-center gap-2">
+                      <small class="text-muted">{{ booking.trek.trek_name }}</small>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                      <small class="text-muted">{{ booking.trek.location }}</small>
+                    </div>
+                    {% if booking.trek.difficulty=='Easy' %}
+                      <div>
+                        <span class="badge bg-success-subtle text-success-emphasis">{{ booking.trek.difficulty }}</span>
+                      </div>
+                    {% elif booking.trek.difficulty=='Moderate' %}
+                      <div>
+                        <span class="badge bg-warning-subtle text-warning-emphasis">{{ booking.trek.difficulty }}</span>
+                      </div>
+                    {% else %}
+                      <div>
+                        <span class="badge bg-danger-subtle text-danger-emphasis">{{ booking.trek.difficulty }}</span>
+                      </div>
+                    {% endif %}
+                    <div class="d-flex align-items-center gap-2">
+                      <small class="text-muted">{{ booking.trek.duration }} days</small>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                      <small class="text-muted">{{ booking.trek.staff.fullname }}</small>
+                    </div>
+                      <div class="d-flex justify-content-lg-end gap-2">
+                        <a class="btn btn-sm btn-success border" href="{{ url_for('viewbooking', booking_id=booking.booking_id) }}">View Details</a>
+                      </div>
+                  </div>
+                </article>
+              </div>
+            {% else %}
+              <p class="text-muted">No active booking found.</p>
+            {% endfor %}
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
+{% endblock content %}

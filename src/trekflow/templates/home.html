@@ -20,15 +20,29 @@
             <li class="nav-item">
               <a class="nav-link" style="text-decoration: underline; text-underline-offset: 5px;" aria-current="page" href="{{ url_for('home') }}">Home</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="{{ url_for('treks') }}">Treks</a>
-            </li>
-            {% if current_user.is_authenticated %}
+            {% if current_user.is_authenticated and current_user.role == 'user' %}
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="{{ url_for('treks') }}">Treks</a>
+              </li>
               <li class="nav-item">
                 <a class="nav-link" aria-current="page" href="{{ url_for('profile') }}">Account</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" aria-current="page" href="{{ url_for('logout') }}">Log out</a>
+              </li>
+            {% elif current_user.is_authenticated and current_user.role == 'staff' %}
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="{{ url_for('staffdashboard') }}">DashBoard</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="{{ url_for('profile') }}">Account</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="{{ url_for('logout') }}">Log out</a>
+              </li>
+            {% elif current_user.is_authenticated and current_user.role == 'admin' %}
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="{{ url_for('admindashboard') }}">Dashboard</a>
               </li>
             {% else %}
               <li class="nav-item">

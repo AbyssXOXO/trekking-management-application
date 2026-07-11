@@ -30,7 +30,7 @@
             <span class="material-symbols-outlined admin-nav-icon">group</span>
             Users
           </a>
-          <a class="nav-link admin-nav-link" href="#">
+          <a class="nav-link admin-nav-link" href="{{ url_for('booking_admin') }}">
             <span class="material-symbols-outlined admin-nav-icon">date_range</span>
             Bookings
           </a>
@@ -48,10 +48,8 @@
           <article class="card border-0 shadow-sm">
             <div class="card-body p-4">
               <h4 class="fw-bold mb-4">Add New Trek</h4>
-
-              <form method="POST" action="">
+              <form method="POST" action="{{ url_for('adding_trek') }}">
                 {{ form.hidden_tag() }}
-
                 <div class="row g-0 border rounded overflow-hidden">
                   <div class="col-12 col-lg-6 p-4 border-end">
                     <div class="row align-items-center mb-3">
@@ -60,42 +58,36 @@
                         {{ form.name(class="form-control") }}
                       </div>
                     </div>
-
                     <div class="row align-items-center mb-3">
                       {{ form.location.label(class="col-sm-4 col-form-label fw-semibold") }}
                       <div class="col-sm-8">
                         {{ form.location(class="form-control") }}
                       </div>
                     </div>
-
                     <div class="row align-items-center mb-3">
                       {{ form.difficulty.label(class="col-sm-4 col-form-control fw-semibold") }}
                       <div class="col-sm-8">
                         {{ form.difficulty(class="form-select") }}
                       </div>
                     </div>
-
                     <div class="row align-items-center mb-3">
                       {{ form.duration.label(class="col-sm-4 col-form-control fw-semibold") }}
                       <div class="col-sm-8">
                         {{ form.duration(class="form-control") }}
                       </div>
                     </div>
-
                     <div class="row align-items-center mb-3">
                       {{ form.available_slots.label(class="col-sm-4 col-form-control fw-semibold") }}
                       <div class="col-sm-8">
                         {{ form.available_slots(class="form-control") }}
                       </div>
                     </div>
-
                     <div class="row align-items-center mb-3">
                       {{ form.total_slots.label(class="col-sm-4 col-form-control fw-semibold") }}
                       <div class="col-sm-8">
                         {{ form.total_slots(class="form-control") }}
                       </div>
                     </div>
-
                     <div class="row align-items-center">
                       {{ form.price.label(class="col-sm-4 col-form-label fw-semibold") }}
                       <div class="col-sm-8">
@@ -103,7 +95,6 @@
                       </div>
                     </div>
                   </div>
-
                   <div class="col-12 col-lg-6 p-4">
                     <div class="row align-items-center mb-3">
                       {{ form.start_date.label(class="col-sm-4 col-form-label fw-semibold") }}
@@ -111,28 +102,24 @@
                         {{ form.start_date(class="form-control") }}
                       </div>
                     </div>
-
                     <div class="row align-items-center mb-3">
                       {{ form.end_date.label(class="col-sm-4 col-form-label fw-semibold") }}
                       <div class="col-sm-8">
                         {{ form.end_date(class="form-control") }}
                       </div>
                     </div>
-
                     <div class="row align-items-center mb-3">
                       {{ form.trek_status.label(class="col-sm-4 col-form-label fw-semibold") }}
                       <div class="col-sm-8">
                         {{ form.trek_status(class="form-select") }}
                       </div>
                     </div>
-
                     <div class="row align-items-center mb-3">
                       {{ form.assigned_staff.label(class="col-sm-4 col-form-label fw-semibold") }}
                       <div class="col-sm-8">
                         {{ form.assigned_staff(class="form-select") }}
                       </div>
                     </div>
-
                     <div class="row mb-3">
                       {{ form.description.label(class="col-sm-4 col-form-label fw-semibold") }}
                       <div class="col-sm-8">
@@ -141,7 +128,6 @@
                     </div>
                   </div>
                 </div>
-
                 <div class="d-flex justify-content-end gap-3 mt-4">
                   <a href="{{ url_for('admindashboard') }}" class="btn btn-light border px-4">Cancel</a>
                   {{ form.submit(class="btn btn-primary px-4") }}

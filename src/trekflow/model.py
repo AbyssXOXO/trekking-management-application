@@ -47,7 +47,7 @@ class Trek(db.Model):
     total_slots = db.Column(db.Integer, nullable=False)
     available_slots = db.Column(db.Integer, nullable=False)
     assigned_staff_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    trek_status = db.Column(db.Enum("Pending", "Approved", "Open", "Closed", "Completed"), nullable=False)
+    trek_status = db.Column(db.Enum("Open", "Closed","Started", "Ongoing", "Completed"), nullable=False)
     price = db.Column(db.Integer, nullable=False)
     description = db.Column(db.Text)
     start_date = db.Column(db.Date, nullable=False)
@@ -65,7 +65,7 @@ class Booking(db.Model):
     trekker_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     trek_id = db.Column(db.Integer, db.ForeignKey('trek.trek_id'), nullable=False)
     booking_date = db.Column(db.Date, nullable=False, default=date.today)
-    booking_status = db.Column(db.Enum("Booked", "Cancelled", "Completed"), nullable=False)
+    booking_status = db.Column(db.Enum("Booked", "Cancelled"), nullable=False)
 
     trekker = db.relationship("User", backref=db.backref("bookings"))
     trek = db.relationship("Trek", backref=db.backref("bookings"))

@@ -3,7 +3,7 @@ from flask_wtf.file import FileAllowed, FileField
 from flask_login import current_user
 from wtforms import StringField, PasswordField, SelectField, SubmitField, TextAreaField, IntegerField
 from wtforms.fields import DateField
-from wtforms.validators import DataRequired, Length, Email, ValidationError, NumberRange
+from wtforms.validators import DataRequired, Length, Email, ValidationError, NumberRange, InputRequired
 from .model import User
 
 
@@ -61,7 +61,7 @@ class AdminTrekForm(FlaskForm):
     duration = IntegerField('Duration (days)', validators=[DataRequired(), NumberRange(min=1)])
     total_slots = IntegerField('Total Slots', validators=[DataRequired(), NumberRange(min=1)])
     available_slots = IntegerField('Available Slots', validators=[DataRequired(), NumberRange(min=1)])
-    trek_status = SelectField('Trek Status', choices=[('', '--Select--'), ('Pending', 'Pending'), ('Approved', 'Approved'), ('Open', 'Open'), ('Closed', 'Closed'), ('Completed', 'Completed')], validators=[DataRequired()])
+    trek_status = SelectField('Trek Status', choices=[('', '--Select--'), ('Open', 'Open'), ('Closed', 'Closed'), ('Started', 'Started'), ('Ongoing', 'Ongoing'), ('Completed', 'Completed')], validators=[DataRequired()])
     price = IntegerField('Price', validators=[DataRequired(), NumberRange(min=1)])
     description = TextAreaField('Description', validators=[DataRequired()])
     start_date = DateField("Start Date", format="%Y-%m-%d", validators=[DataRequired()])
@@ -69,6 +69,20 @@ class AdminTrekForm(FlaskForm):
     assigned_staff = SelectField('Assign Staff', coerce=int, validators=[DataRequired(message='Please select a staff member.')])
     submit = SubmitField('Save')
 
+class CloseTrekForm(FlaskForm):
+    close = SubmitField('Close')
+
 class admin_Users(FlaskForm):
     activate = SubmitField('Activate')
     blacklist = SubmitField('Blacklist')
+
+class BookingForm(FlaskForm):
+    submit = SubmitField('Book')
+
+class CancelBookingForm(FlaskForm):
+    cancel = SubmitField('Cancel')
+
+class ManageTreks(FlaskForm):
+    available_slots = IntegerField('Available Slots', validators=[InputRequired(), NumberRange(min=0)])
+    trek_status = SelectField('Trek Status', choices=[('Open', 'Open'), ('Closed', 'Closed'), ('Started', 'Started'), ('Ongoing', 'Ongoing'), ('Completed', 'Completed')], validators=[DataRequired()])
+    submit = SubmitField('Update Trek')

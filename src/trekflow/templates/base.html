@@ -18,17 +18,23 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      <div class="container mt-3">
+  <div class="toast-container position-fixed top-0 end-0 p-3">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
         {% for category, message in messages %}
-          <div class="alert alert-{{ category }}">
-            {{ message }}
+          <div class="toast show" role="alert">
+            <div class="toast-header">
+              <strong class="me-auto">{{ category|title }}</strong>
+              <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body bg-{{ category }}-subtle text-{{ category }}-emphasis">
+              {{ message }}
+            </div>
           </div>
         {% endfor %}
-      </div>
-    {% endif %}
-  {% endwith %}
+      {% endif %}
+    {% endwith %}
+  </div>
   {% block content %}
   {% endblock %}
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
