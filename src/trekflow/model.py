@@ -22,21 +22,6 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f"user('{self.id}', '{self.fullname}', '{self.username}', '{self.image_file}', '{self.role}', '{self.status}', '{self.created_date}')"
 
-
-class StaffProfile(db.Model):
-    __tablename__ = "staff_profile"
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, unique=True)
-    contact = db.Column(db.String(15), unique=True)
-    address = db.Column(db.String(200))
-    bio = db.Column(db.Text)
-
-    user = db.relationship("User", backref=db.backref("staff_profile", uselist=False))
-
-    def __repr__(self):
-        return f"staff('{self.id}', '{self.user_id}', '{self.address}', '{self.bio}', '{self.contact}')"
-
-
 class Trek(db.Model):
     __tablename__ = "trek"
     trek_id = db.Column(db.Integer, primary_key=True, nullable=False)

@@ -2,7 +2,7 @@ from trekflow import app, bcrypt, db
 from trekflow.model import User
 
 
-with app.app_context():
+with app.app_context():            #for creating admin in User table
     db.create_all()
 
     admin = User.query.filter_by(role="admin").first()
@@ -24,3 +24,5 @@ with app.app_context():
         db.session.commit()
 
         print("Admin created successfully.")
+
+

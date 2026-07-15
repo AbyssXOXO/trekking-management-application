@@ -131,7 +131,7 @@ def treks():
     form = BookingForm()
     difficulty = request.args.get("difficulty", "").strip()
     location = request.args.get("location", "").strip()
-    treks_query = Trek.query.filter(Trek.trek_status.in_(["Open", "Closed", "Started", "Ongoing"]))
+    treks_query = Trek.query.filter_by(trek_status="Open")
     if difficulty:
         treks_query = treks_query.filter_by(difficulty=difficulty)
     if location:

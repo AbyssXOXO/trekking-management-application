@@ -49,7 +49,7 @@ button.btn.submit-button:focus:active {
 
 .gradient-login {
   background:
-    url("../images/login-mountains.jpg");
+    url("../images/login-mountains.webp");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -76,7 +76,7 @@ button.btn.submit-button:focus:active {
 /* FOR REGISTER.HTML */
 .gradient-register {
   background:
-    url("../images/register-mountains.jpg");
+    url("../images/register-mountains.webp");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -89,6 +89,14 @@ button.btn.submit-button:focus:active {
 
 
 /* for home page */
+.home-main {
+  background-image:
+  linear-gradient(90deg,rgba(255, 255, 255, 1) 0%,rgba(255, 255, 255, 0.9) 30%,rgba(255, 255, 255, 0.4) 50%,rgba(255, 255, 255, 0) 70%),
+  url("../images/home-main.webp");
+  background-size: cover, cover;
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
+}
 
 .home-nav-button .nav-link { 
   font-family: "Nunito Sans", sans-serif;
